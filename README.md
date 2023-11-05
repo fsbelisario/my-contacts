@@ -1,1 +1,2 @@
-# my-contacts
+# MyContacts Application
+## First exercise from JStack
