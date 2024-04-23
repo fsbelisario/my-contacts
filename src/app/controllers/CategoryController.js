@@ -1,3 +1,5 @@
+const isValidUUID = require('../utils/isValidUUID');
+
 const CategoryRepository = require('../repositories/CategoryRepository');
 
 class CategoryController {
@@ -9,6 +11,10 @@ class CategoryController {
 
   async show(request, response) {
     const { id } = request.params;
+
+    if (!isValidUUID(id)) {
+      return response.status(400).json({ error: 'ID da categoria inválido.' });
+    }
 
     const category = await CategoryRepository.findById(id);
 
@@ -42,14 +48,18 @@ class CategoryController {
 
     const { name } = request.body;
 
-    const categoryExists = await CategoryRepository.findById(id);
-
-    if (!categoryExists) {
-      return response.status(404).json({ error: 'Categoria não encontrada.' });
+    if (!isValidUUID(id)) {
+      return response.status(400).json({ error: 'ID da categoria inválido.' });
     }
 
     if (!name) {
       return response.status(400).json({ error: 'Nome da categoria é obrigatório.' });
+    }
+
+    const categoryExists = await CategoryRepository.findById(id);
+
+    if (!categoryExists) {
+      return response.status(404).json({ error: 'Categoria não encontrada.' });
     }
 
     const categoryByName = await CategoryRepository.findByEmail(name);
@@ -65,6 +75,10 @@ class CategoryController {
 
   async delete(request, response) {
     const { id } = request.params;
+
+    if (!isValidUUID(id)) {
+      return response.status(400).json({ error: 'ID da categoria inválido.' });
+    }
 
     await CategoryRepository.delete(id);
 
